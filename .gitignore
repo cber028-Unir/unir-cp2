@@ -1,3 +1,4 @@
 keys-cp2/
 terraform/.terraform/
 terraform/.terraform.lock.hcl
+docker/
