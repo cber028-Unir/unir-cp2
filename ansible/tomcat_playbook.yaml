@@ -9,7 +9,7 @@
           ansible.builtin.package:
                         name: podman
                         state: latest
-        - name: Podman login to registry
+        - name: Login to default registry and create ${XDG_RUNTIME_DIR}/containers/auth.json
           become: yes
           containers.podman.podman_login:
                   username: 00000000-0000-0000-0000-000000000000
