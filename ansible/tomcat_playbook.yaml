@@ -32,3 +32,24 @@
                         - 80
                 ports:
                         8080:80
+        - name: Creating a service file
+          become: yes
+          copy: 
+           content: |-
+             [Unit]
+             Description=Tomcat Service
+             Requires=network.target
+             After=network.target
+             [Service]
+             Type=forking
+             User=tomcat
+             Environment="CATALINA_PID=/opt/tomcat8/logs/tomcat.pid"
+             Environment="CATALINA_BASE=/opt/tomcat8"
+             Environment="CATALINA_HOME=/opt/tomcat8"
+             Environment="CATALINA_OPTS=-Xms512M -Xmx1024M -server -XX:+UseParallelGC"
+             ExecStart=/opt/tomcat8/bin/startup.sh
+             ExecStop=/opt/tomcat8/bin/shutdown.sh
+             Restart=on-abnormal
+             [Install]
+             WantedBy=multi-user.target
+           dest: /etc/systemd/system/tomcat.service
