@@ -1,0 +1,34 @@
+---
+
+- name: Tomcat playbook
+  hosts: cp2-vm
+  gather_facts: false
+  tasks:
+        - name: podman install
+          become: yes
+          ansible.builtin.package:
+                        name: podman
+                        state: latest
+        - name: Podman login to registry
+          become: yes
+          containers.podman.podman_login:
+                  username: 00000000-0000-0000-0000-000000000000
+                  password: 'eyJhbGciOiJSUzI1NiIsInRtpZCI6IkpYN1c6VkY1UzpNTzZFOlhaNlM6TVgyNzpHMjdXOllNMkM6RFlXSzpKQ1RNOjdFNk46T0Y3WjpGWkIyIn0.eyJqdGkiOiI2NTQ5NYjgtOTc1Yi00YjVkYmE1ODc1YzUiLCJzdWIiOiJjYXJsb3MuYmVybXVkZXowMjhAY29tdW5pZGFkdW5pci5uZXQiLCJuYmYiOjE2Nzk4NDEY3OTg1MzU0NiwiaWF0IjoxNjc5ODQxODQ2LCJpc3MiOiJBenVyZSBDb250YWluZXIgUmVnaXN0cnkiLCJhdWQiOiJjYmVyMDI4dW5pcmFjcIiwidmVyc2lvbiI6IjEuMCIsInJpZCI6IjkyYmI2Njk5NjZjYTQ2NzBiYzdjN2YwMDE2NDAxNjgzIiwiZ3JhbnRfdHlwZSI6InJlZnJlc2hBpZCI6IjA0YjA3Nzk1LThkZGItNDYxYS1iYmVlLTAyZjllMWJmN2I0NiIsInRlbmFudCI6Ijg5OTc4OWRjLTIwMmYtNDRiNC04NDcyLWE2ZInBlcm1pc3Npb25zIjp7IkFjdGlvbnMiOlsicmVhZCIsIndyaXRlIiwiZGVsZXRlIiwiZGVsZXRlZC9yZWFkIiwiZGVsZXRlZC9yZXN0b3JJOb3RBY3Rpb25zIjpudWxsfSwicm9sZXMiOltdfQ.VCmfP94n2clu5Giu2s0Csh8GEqj3MhPFZ5bafoCQuIyZd1_8YcI7uQx2mVLzTZOMSZ82eWHrJOjeNywBvBTdAQWeT4r02DvWrMftBMl6n55Tgt964bz_E-5vJTTThCUOrDIaqt_kPLsuzLjXCvc5j3xfEj2grrgK7IUkdMCaIp99XwQksJ3iM3EPv9Hfda-DzWoIrhGFuutCzjWmPWwUqlIteqY2-MuW1SG08vjg8URrR3sTVlnExgQS7CIVXlDiiIeRf-rbRcjHbH6upow03G41wSKlipf5cp37cKBmQ'
+                  registry: cber028uniracr.azurecr.io
+        - name: pull image
+          become: yes
+          containers.podman.podman_image:
+                name: cp2/tomcat
+                pull: true
+                tag: latest
+        - name: run tomcat
+          become: yes
+          containers.podman.podman_container:
+                name: tomcat
+                image: cp2/tomcat
+                state: started
+                detach: true
+                expose:
+                        - 80
+                ports:
+                        8080:80

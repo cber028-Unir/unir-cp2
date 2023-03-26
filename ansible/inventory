@@ -1,0 +1,2 @@
+[cp2vm]
+51.142.96.52 ansible_ssh_user='ubuntu' ansible_ssh_private_key_file='../keys-cp2/azure'
